@@ -3,17 +3,18 @@ Simple IRC server using uvxx
 
 ## Building
 ```sh
-	% mkdir build
-	% cd build
-	% cmake ..
-	% make
+% git submodule update --init
+% mkdir build
+% cd build
+% cmake ..
+% make
 ```
 
 ## Running
 ```sh
-	% ./ircxxd_boost [host] [port]
+% ./ircxxd_boost [host] [port]
 	or
-	% ./ircxxd_thread [host] [port]
+% ./ircxxd_thread [host] [port]
 ```
 
 Both host and port are optional (and you may skip the host, set only the port).
