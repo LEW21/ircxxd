@@ -159,11 +159,9 @@ void cmd_who(irc_server& irc, user& user, vector<string>& params)
 	user.send(irc.hostname, "352", {params[0], "End of /WHO list."});
 }
 
-void handle_connection(irc_server& irc, uvxx::tcp& server)
+void handle_connection(irc_server& irc, uvxx::tcp&& client)
 {
-	xx::spawn_task([&](xx::task&& task){
-		auto client = server.accept();
-
+	xx::spawn_task([&irc, client = std::move(client)](xx::task&& task) mutable {
 		auto cmds = parse_commands(client.read(task)).begin();
 
 		auto user_ptr = std::make_unique<user>("*", std::move(client));
@@ -296,7 +294,7 @@ int main(int argc, char** argv)
 
 	xx::spawn_task([=, &irc, &server](xx::task&& task){
 		for (auto client_connected : server.listen(task, DEFAULT_BACKLOG))
-			handle_connection(irc, server);
+			handle_connection(irc, server.accept());
 	});
 
 	return uv_run(loop, UV_RUN_DEFAULT);
