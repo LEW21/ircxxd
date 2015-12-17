@@ -293,8 +293,8 @@ int main(int argc, char** argv)
 	server.bind(host, port);
 
 	xx::spawn_task([=, &irc, &server](xx::task&& task){
-		for (auto client_connected : server.listen(task, DEFAULT_BACKLOG))
-			handle_connection(irc, server.accept());
+		for (auto& client : server.listen(task, DEFAULT_BACKLOG))
+			handle_connection(irc, std::move(client));
 	});
 
 	return uv_run(loop, UV_RUN_DEFAULT);
